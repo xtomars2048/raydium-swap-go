@@ -1,20 +1,22 @@
-package test_generate_tx
+package test_tx
 
 import (
 	"fmt"
 	"github.com/gagliardetto/solana-go/rpc"
 	"github.com/katelouis/raydium-swap-go/raydium"
-	"github.com/katelouis/raydium-swap-go/raydium/test_generate_tx/types"
+	"github.com/katelouis/raydium-swap-go/raydium/test_tx/types"
 	"github.com/katelouis/raydium-swap-go/raydium/trade"
 	"github.com/katelouis/raydium-swap-go/raydium/utils"
 	"os"
 	"strconv"
 	"testing"
+	"time"
 )
 
 func TestGenerateTx(t *testing.T) {
 
 	var req types.ReqBuildTx
+	req.RequestId = strconv.FormatInt(time.Now().Unix(), 10)
 	req.FromAddress = "Fyvg9AgdZT3zgDKF21C7LXXg91fhhkM5f74PfS4d2KCa"
 	req.InputToken = "So11111111111111111111111111111111111111112"
 	req.InputTokenDecimal = 9
