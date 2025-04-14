@@ -15,7 +15,7 @@ This repository is not an SDK. It merely serves as an example how to swap using 
 ## How to use?
 
 ```shell
-git clone https://github.com/ScribeSavant/raydium-swap-go.git
+git clone https://github.com/katelouis/raydium-swap-go.git
 cd raydium-swap-go
 export WALLET_PRIVATE_KEY = "someimportantprivatekey"
 export RPC_URL = "https://..."
