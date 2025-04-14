@@ -32,7 +32,7 @@ func NewSwapV4Instruction(
 	minAmountOut uint64,
 	tokenAccountIn solana.PublicKey,
 	tokenAccountOut solana.PublicKey,
-	signer solana.PrivateKey) (solana.Instruction, error) {
+	signerP solana.PublicKey) (solana.Instruction, error) {
 	inst := &SwapV4Instruction{
 		Instruction:      9,
 		AmountIn:         amountIn,
@@ -65,7 +65,7 @@ func NewSwapV4Instruction(
 	keys.Append(solana.Meta(poolKeys.MarketAuthority))
 	keys.Append(solana.Meta(tokenAccountIn).WRITE())
 	keys.Append(solana.Meta(tokenAccountOut).WRITE())
-	keys.Append(solana.Meta(signer.PublicKey()).SIGNER())
+	keys.Append(solana.Meta(signerP).SIGNER())
 
 	data, err := inst.Data()
 	if err != nil {
