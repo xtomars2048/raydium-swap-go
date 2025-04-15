@@ -23,7 +23,7 @@ func TestGenerateTx(t *testing.T) {
 	req.OutputToken = "6p6xgHyF7AeE6TZkSmFsko444wqoP15icUSqi2jfGiPN"
 	req.OutputTokenDecimal = 6
 	req.Slippage = "0.01"
-	req.Amount = "0.001"
+	req.Amount = "0.0001"
 	req.Fee = 25000
 
 	connection := rpc.New(os.Getenv("RPC_URL"))
@@ -69,5 +69,7 @@ func TestGenerateTx(t *testing.T) {
 		panic(err)
 	}
 
-	fmt.Printf("kelly output:>>> " + tx.Message.ToBase64())
+	fmt.Printf("kelly output:>>> " + tx.Message.ToBase64() + "\n")
+
+	SendSignedTx(tx.Message.ToBase64())
 }
