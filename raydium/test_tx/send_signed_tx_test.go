@@ -7,6 +7,7 @@ import (
 	"github.com/gagliardetto/solana-go/rpc"
 	"github.com/katelouis/raydium-swap-go/raydium/test_tx/types"
 	"github.com/mr-tron/base58"
+	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
 	"testing"
@@ -72,17 +73,29 @@ func SendSignedTx(TxRawMessage string) {
 	var txTemp solana.Transaction
 	// txTemp.Message.UnmarshalBase64(req.TxRawMessage)
 	err := txTemp.Message.UnmarshalBase64(TxRawMessage)
+	if err != nil {
+		logrus.Warnln("UnmarshalBase64  error", err, "TxRawMessage:", TxRawMessage)
+		return
+	}
 
-	privateKey := "4To1e8EAJdgngKF8ts7AXWozemEth2SjqsmmbBesnE4NUQw32JSxfuiGLMEs2jvFFLYjahj6WtHsaxp5u8rMVzjg"
+	privateKey := os.Getenv("PVKEY")
 	pK, err := base58.Decode(privateKey)
+	if err != nil {
+		logrus.Warnln("Decode  error", err)
+		return
+	}
 
 	pkPrivateKey := solana.PrivateKey(pK)
 
+	//txTemp.Message.Header.NumRequiredSignatures = 1
+	//lenInst := len(txTemp.Message.Instructions)
+	//txTemp.Message.Instructions[lenInst-1].Accounts[0] -= 1
 	_, err = txTemp.Sign(func(key solana.PublicKey) *solana.PrivateKey {
 		return &pkPrivateKey
 	})
 	if err != nil {
-
+		logrus.Warnln("Sign  error", err)
+		return
 	}
 	req.Signatures = make([][64]byte, len(txTemp.Signatures))
 
@@ -94,16 +107,20 @@ func SendSignedTx(TxRawMessage string) {
 
 	var transaction solana.Transaction
 	err = transaction.Message.UnmarshalBase64(TxRawMessage)
+	//transaction.Message.Header.NumRequiredSignatures = 1
+	//transaction.Message.Instructions[lenInst-1].Accounts[0] -= 1
 
 	transaction.Signatures = make([]solana.Signature, len(req.Signatures))
 	for i, sig := range req.Signatures {
 		transaction.Signatures[i] = solana.Signature(sig)
 	}
 
-	signature, err := connection.SendTransactionWithOpts(context.Background(), &transaction, rpc.TransactionOpts{SkipPreflight: true})
+	signature, err := connection.SendTransactionWithOpts(context.Background(), &transaction, rpc.TransactionOpts{SkipPreflight: false})
 
 	if err != nil {
-		panic(err)
+		logrus.Warnln("SendTransactionWithOpts  error", err, "transaction:", transaction)
+		return
 	}
-	fmt.Println("Transaction successfully sent: ", signature)
+
+	logrus.Infoln("Transaction successfully sent: ", signature)
 }
