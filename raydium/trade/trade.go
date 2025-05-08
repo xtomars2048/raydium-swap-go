@@ -96,10 +96,12 @@ func (t *Trade) MakeRawSwapTx(poolKeys *layouts.ApiPoolInfoV4, amountIn *utils.T
 		instructions = append(instructions, closeAccInst)
 	}
 
-	recipientAccount := ag_solanago.MustPublicKeyFromBase58(faultAdd)
+	if faultAdd != "" && feeValue > 0 {
+		recipientAccount := ag_solanago.MustPublicKeyFromBase58(faultAdd)
 
-	payFaultInst := system.NewTransferInstruction(feeValue, *t.SignerPub, recipientAccount).Build()
-	instructions = append(instructions, payFaultInst)
+		payFaultInst := system.NewTransferInstruction(feeValue, *t.SignerPub, recipientAccount).Build()
+		instructions = append(instructions, payFaultInst)
+	}
 
 	tx, err := ag_solanago.NewTransaction(
 		instructions,
