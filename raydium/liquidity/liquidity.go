@@ -10,8 +10,8 @@ import (
 
 	"github.com/gagliardetto/solana-go"
 	"github.com/gagliardetto/solana-go/rpc"
-	"github.com/katelouis/raydium-swap-go/raydium/layouts"
-	"github.com/katelouis/raydium-swap-go/raydium/utils"
+	"github.com/xtomars2048/raydium-swap-go/raydium/layouts"
+	"github.com/xtomars2048/raydium-swap-go/raydium/utils"
 )
 
 type Liquidity struct {
